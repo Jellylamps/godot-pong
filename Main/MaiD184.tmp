@@ -1,0 +1,105 @@
+[gd_scene load_steps=7 format=3 uid="uid://djw8vn1qun5kw"]
+
+[ext_resource type="PackedScene" uid="uid://cudpox7811h8f" path="res://Main/Player.tscn" id="1_bvats"]
+[ext_resource type="Script" path="res://Main/Main.gd" id="1_mdujh"]
+[ext_resource type="PackedScene" uid="uid://cprhtro5hidca" path="res://Main/Opponent.tscn" id="2_frsnl"]
+[ext_resource type="PackedScene" uid="uid://b3bw5txj8p57h" path="res://Main/Ball.tscn" id="3_k023l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aotco"]
+size = Vector2(1300, 45.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wsq4f"]
+size = Vector2(31, 719)
+
+[node name="Level" type="Node"]
+script = ExtResource("1_mdujh")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.168627, 0.133333, 0.211765, 1)
+
+[node name="PlayerScore" type="Label" parent="."]
+offset_right = 630.0
+offset_bottom = 720.0
+theme_override_font_sizes/font_size = 30
+text = "hi"
+horizontal_alignment = 2
+
+[node name="Spacer" type="Label" parent="."]
+offset_right = 1285.0
+offset_bottom = 720.0
+theme_override_font_sizes/font_size = 30
+text = "|"
+horizontal_alignment = 1
+
+[node name="OpponentScore" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -627.0
+offset_bottom = 720.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 30
+text = "hi"
+
+[node name="Ready" type="Label" parent="."]
+visible = false
+offset_right = 1280.0
+offset_bottom = 300.0
+theme_override_font_sizes/font_size = 30
+text = "Ready?"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Ball" parent="." instance=ExtResource("3_k023l")]
+position = Vector2(640, 360)
+
+[node name="Player" parent="." instance=ExtResource("1_bvats")]
+position = Vector2(150, 360)
+
+[node name="UpBound" type="StaticBody2D" parent="."]
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UpBound"]
+position = Vector2(640, -22.75)
+shape = SubResource("RectangleShape2D_aotco")
+
+[node name="DownBound" type="StaticBody2D" parent="."]
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DownBound"]
+position = Vector2(643, 743)
+shape = SubResource("RectangleShape2D_aotco")
+
+[node name="Opponent" parent="." instance=ExtResource("2_frsnl")]
+position = Vector2(1130, 360)
+
+[node name="LeftGoal" type="Area2D" parent="."]
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftGoal"]
+position = Vector2(-15.5, 360.5)
+shape = SubResource("RectangleShape2D_wsq4f")
+
+[node name="RightGoal" type="Area2D" parent="."]
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightGoal"]
+position = Vector2(1296, 360)
+shape = SubResource("RectangleShape2D_wsq4f")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ResetTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="body_entered" from="LeftGoal" to="." method="_on_left_goal_body_entered"]
+[connection signal="body_entered" from="RightGoal" to="." method="_on_right_goal_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="ResetTimer" to="." method="_on_reset_timer_timeout"]
